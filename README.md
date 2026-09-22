@@ -1,36 +1,40 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# MakeUrMark
+
+Landing page for **MakeUrMark** — an Indian, woman-owned, unisex print-on-demand brand selling printed round-neck & polo tees and printed pillows, with bulk-order support for businesses. Orders don't go through in-site checkout; every CTA deep-links to WhatsApp Business with a pre-filled message.
+
+## Tech Stack
+
+- [Next.js](https://nextjs.org) (App Router) + TypeScript
+- [Tailwind CSS v4](https://tailwindcss.com) (theme tokens defined in `src/app/globals.css`, no `tailwind.config.ts`)
+- [Framer Motion](https://www.framer.com/motion/) for entrance/scroll animations
+- [lucide-react](https://lucide.dev) for icons
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to view it.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Before Launch
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **WhatsApp number**: set the real business number in `src/lib/config.ts` (`WHATSAPP_NUMBER`) — it's currently a placeholder (`91XXXXXXXXXX`).
+- **Product photography**: swap the stock images in `public/images/` (`hero-tee.jpg`, `category-*.jpg`, `founder.jpg`) for real product/brand photos.
 
-## Learn More
+## Project Structure
 
-To learn more about Next.js, take a look at the following resources:
+- `src/app/` — root layout, global styles, and the single-page route (`page.tsx`)
+- `src/components/` — one component per landing page section (`Hero`, `ShopCategories`, `HowItWorks`, `BulkOrders`, `Testimonials`, `AboutFounder`, `CtaBanner`, `Footer`, etc.)
+- `src/lib/config.ts` — central WhatsApp number + pre-filled message templates used by every CTA
+- `public/images/` — product and brand imagery
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Scripts
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+npm run dev     # start the dev server
+npm run build   # production build
+npm run start   # serve the production build
+npm run lint    # run ESLint
+```
