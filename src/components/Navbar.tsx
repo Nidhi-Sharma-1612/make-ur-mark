@@ -2,16 +2,17 @@
 
 import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
+import Link from "next/link";
 import Logo from "./Logo";
 import WhatsAppButton from "./WhatsAppButton";
 import { buildWhatsAppLink, WHATSAPP_MESSAGES } from "@/lib/config";
 
 const NAV_LINKS = [
-  { label: "Shop", href: "#shop" },
-  { label: "Custom Print", href: "#how-it-works" },
-  { label: "Bulk Orders", href: "#bulk-orders" },
-  { label: "About", href: "#about" },
-  { label: "Contact", href: "#contact" },
+  { label: "Shop", href: "/products" },
+  { label: "Custom Print", href: "/#how-it-works" },
+  { label: "Bulk Orders", href: "/#bulk-orders" },
+  { label: "About", href: "/#about" },
+  { label: "Contact", href: "/#contact" },
 ];
 
 export default function Navbar() {
@@ -32,24 +33,24 @@ export default function Navbar() {
       }`}
     >
       <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-        <a href="#top" aria-label="MakeUrMark home">
+        <Link href="/#top" aria-label="MakeUrMark home">
           <Logo />
-        </a>
+        </Link>
 
-        <ul className="hidden items-center gap-8 md:flex">
+        <ul className="hidden items-center gap-6 lg:flex xl:gap-8">
           {NAV_LINKS.map((link) => (
             <li key={link.href}>
-              <a
+              <Link
                 href={link.href}
                 className="text-sm font-medium text-brand-ink/80 transition-colors hover:text-brand-rose-deep"
               >
                 {link.label}
-              </a>
+              </Link>
             </li>
           ))}
         </ul>
 
-        <div className="hidden md:block">
+        <div className="hidden lg:block">
           <WhatsAppButton href={buildWhatsAppLink(WHATSAPP_MESSAGES.general)}>
             Order on WhatsApp
           </WhatsAppButton>
@@ -57,7 +58,7 @@ export default function Navbar() {
 
         <button
           type="button"
-          className="text-brand-rose-deep md:hidden"
+          className="text-brand-rose-deep lg:hidden"
           aria-label={open ? "Close menu" : "Open menu"}
           onClick={() => setOpen((v) => !v)}
         >
@@ -66,17 +67,17 @@ export default function Navbar() {
       </nav>
 
       {open ? (
-        <div className="border-t border-brand-blush bg-brand-cream px-6 pb-6 md:hidden">
+        <div className="border-t border-brand-blush bg-brand-cream px-6 pb-6 lg:hidden">
           <ul className="flex flex-col gap-4 pt-4">
             {NAV_LINKS.map((link) => (
               <li key={link.href}>
-                <a
+                <Link
                   href={link.href}
                   className="block text-sm font-medium text-brand-ink/80"
                   onClick={() => setOpen(false)}
                 >
                   {link.label}
-                </a>
+                </Link>
               </li>
             ))}
           </ul>

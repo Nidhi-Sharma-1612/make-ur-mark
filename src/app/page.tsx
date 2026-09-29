@@ -1,5 +1,6 @@
 import AboutFounder from "@/components/AboutFounder";
 import BulkOrders from "@/components/BulkOrders";
+import ContactForm from "@/components/ContactForm";
 import CtaBanner from "@/components/CtaBanner";
 import Footer from "@/components/Footer";
 import Hero from "@/components/Hero";
@@ -22,6 +23,7 @@ export default function Home() {
         <Testimonials />
         <AboutFounder />
         <CtaBanner />
+        <ContactForm />
       </main>
       <Footer />
     </>

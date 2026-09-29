@@ -1,18 +1,20 @@
 import { AtSign, MessageCircle } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import Logo from "./Logo";
 import { buildWhatsAppLink, WHATSAPP_MESSAGES } from "@/lib/config";
 
 const QUICK_LINKS = [
-  { label: "Shop", href: "#shop" },
-  { label: "Custom Print", href: "#how-it-works" },
-  { label: "Bulk Orders", href: "#bulk-orders" },
-  { label: "About", href: "#about" },
+  { label: "Shop", href: "/products" },
+  { label: "Custom Print", href: "/#how-it-works" },
+  { label: "Bulk Orders", href: "/#bulk-orders" },
+  { label: "About", href: "/#about" },
+  { label: "Contact", href: "/#contact" },
 ];
 
 export default function Footer() {
   return (
-    <footer id="contact" className="bg-brand-ink py-14 text-brand-blush-light">
+    <footer className="bg-brand-ink py-14 text-brand-blush-light">
       <div className="mx-auto grid max-w-6xl gap-10 px-6 sm:grid-cols-3">
         <div className="flex flex-col gap-3">
           <Logo variant="light" />
@@ -24,13 +26,13 @@ export default function Footer() {
         <div className="flex flex-col gap-3">
           <span className="font-serif text-base text-brand-white">Quick links</span>
           {QUICK_LINKS.map((link) => (
-            <a
+            <Link
               key={link.href}
               href={link.href}
               className="text-sm text-brand-blush-light/80 hover:text-brand-white"
             >
               {link.label}
-            </a>
+            </Link>
           ))}
         </div>
 

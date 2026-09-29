@@ -2,7 +2,8 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { ArrowUpRight } from "lucide-react";
+import Link from "next/link";
+import { ArrowUpRight, ArrowRight } from "lucide-react";
 import SectionHeading from "./SectionHeading";
 import { buildWhatsAppLink, WHATSAPP_MESSAGES } from "@/lib/config";
 
@@ -71,6 +72,16 @@ export default function ShopCategories() {
             </span>
           </motion.a>
         ))}
+      </div>
+
+      <div className="mt-10 flex justify-center">
+        <Link
+          href="/products"
+          className="inline-flex items-center gap-2 rounded-full border border-brand-rose-deep px-6 py-3 text-sm font-medium text-brand-rose-deep transition-colors duration-200 hover:bg-brand-rose-deep hover:text-brand-white"
+        >
+          View All Products
+          <ArrowRight className="h-4 w-4" />
+        </Link>
       </div>
     </section>
   );
