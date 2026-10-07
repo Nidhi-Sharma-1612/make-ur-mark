@@ -56,11 +56,11 @@ export default function Hero() {
           className="relative mx-auto aspect-square w-full max-w-md overflow-hidden rounded-[2.5rem] bg-brand-blush/60 shadow-xl shadow-brand-rose/10"
         >
           <Image
-            src="/images/hero-tee.jpg"
-            alt="Printed tee with an embroidered graphic design"
+            src="/images/products/hero-king-lion.png"
+            alt="Model wearing a printed King of Hearts lion graphic tee"
             fill
             sizes="(min-width: 1024px) 448px, 90vw"
-            className="object-cover"
+            className="object-cover object-top"
             priority
           />
           <div className="pointer-events-none absolute inset-4 rounded-[2rem] border border-brand-white/60" />

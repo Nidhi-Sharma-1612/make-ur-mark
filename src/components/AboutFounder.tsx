@@ -18,8 +18,8 @@ export default function AboutFounder() {
           className="relative mx-auto aspect-square w-full max-w-sm overflow-hidden rounded-full bg-brand-blush/50 ring-4 ring-brand-white"
         >
           <Image
-            src="/images/founder.jpg"
-            alt="MakeUrMark founder designing in her studio"
+            src="/images/products/about-story.png"
+            alt="A MakeUrMark printed tee, styled in the studio"
             fill
             sizes="(min-width: 1024px) 384px, 90vw"
             className="object-cover"

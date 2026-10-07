@@ -4,15 +4,29 @@ import Link from "next/link";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import SectionHeading from "@/components/SectionHeading";
+import { CATEGORIES } from "@/lib/categories";
 import { PRODUCTS } from "@/lib/products";
 
 export const metadata: Metadata = {
   title: "Products — MakeUrMark",
   description:
-    "Browse MakeUrMark's full catalog of printed tees, hoodies, bags, caps, pillows, and custom designs.",
+    "Browse MakeUrMark's full catalog of printed tees, shirts, hoodies, bags, mugs, and pillows.",
 };
 
-export default function ProductsPage() {
+type PageProps = {
+  searchParams: Promise<{ category?: string }>;
+};
+
+export default async function ProductsPage({ searchParams }: PageProps) {
+  const { category: categorySlug } = await searchParams;
+  const activeCategory = categorySlug
+    ? CATEGORIES.find((c) => c.slug === categorySlug)
+    : undefined;
+
+  const products = activeCategory
+    ? PRODUCTS.filter((product) => product.categorySlug === activeCategory.slug)
+    : PRODUCTS;
+
   return (
     <>
       <Navbar />
@@ -20,44 +34,80 @@ export default function ProductsPage() {
         <section className="mx-auto max-w-6xl px-6 py-16 sm:py-20">
           <SectionHeading
             eyebrow="Full catalog"
-            title="Everything you can print with us"
-            subtitle="From everyday tees to bulk merch for your business — pick a product, choose your size and print, and we'll take it from there."
+            title={activeCategory ? activeCategory.name : "Everything you can print with us"}
+            subtitle={
+              activeCategory
+                ? activeCategory.description
+                : "From everyday tees to bulk merch for your business — pick a product, choose your size and print, and we'll take it from there."
+            }
           />
 
-          <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {PRODUCTS.map((product) => (
+          <div className="mt-8 flex flex-wrap justify-center gap-2">
+            <Link
+              href="/products"
+              className={`rounded-full border px-4 py-1.5 text-sm font-medium transition-colors ${
+                !activeCategory
+                  ? "border-brand-rose-deep bg-brand-rose-deep text-brand-white"
+                  : "border-brand-blush text-brand-ink/70 hover:border-brand-rose"
+              }`}
+            >
+              All
+            </Link>
+            {CATEGORIES.map((category) => (
               <Link
-                key={product.slug}
-                href={`/products/${product.slug}`}
-                className="group flex flex-col gap-4 rounded-3xl border border-brand-blush bg-brand-white p-6 shadow-sm transition-[box-shadow,border-color] duration-300 hover:border-brand-rose hover:shadow-xl hover:shadow-brand-rose/15"
+                key={category.slug}
+                href={`/products?category=${category.slug}`}
+                className={`rounded-full border px-4 py-1.5 text-sm font-medium transition-colors ${
+                  activeCategory?.slug === category.slug
+                    ? "border-brand-rose-deep bg-brand-rose-deep text-brand-white"
+                    : "border-brand-blush text-brand-ink/70 hover:border-brand-rose"
+                }`}
               >
-                <div className="relative aspect-square overflow-hidden rounded-2xl bg-brand-blush-light">
-                  <Image
-                    src={product.image}
-                    alt={product.name}
-                    fill
-                    sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                    className="object-cover transition-transform duration-300 group-hover:scale-105"
-                  />
-                </div>
-                <div>
-                  <span className="text-xs font-medium tracking-wide text-brand-rose-deep uppercase">
-                    {product.category}
-                  </span>
-                  <h3 className="mt-1 font-serif text-lg text-brand-ink">{product.name}</h3>
-                  <p className="mt-1 text-sm text-brand-ink/70">{product.tagline}</p>
-                </div>
-                <div className="mt-auto flex items-center justify-between pt-2">
-                  <span className="text-sm font-semibold text-brand-rose-deep">
-                    From ₹{product.startingPrice}
-                  </span>
-                  {product.sizes ? (
-                    <span className="text-xs text-brand-ink/50">{product.sizes.join(" / ")}</span>
-                  ) : null}
-                </div>
+                {category.name}
               </Link>
             ))}
           </div>
+
+          {products.length > 0 ? (
+            <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {products.map((product) => (
+                <Link
+                  key={product.slug}
+                  href={`/products/${product.slug}`}
+                  className="group flex flex-col gap-4 rounded-3xl border border-brand-blush bg-brand-white p-6 shadow-sm transition-[box-shadow,border-color] duration-300 hover:border-brand-rose hover:shadow-xl hover:shadow-brand-rose/15"
+                >
+                  <div className="relative aspect-square overflow-hidden rounded-2xl bg-brand-blush-light">
+                    <Image
+                      src={product.image}
+                      alt={product.name}
+                      fill
+                      sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                      className="object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
+                  </div>
+                  <div>
+                    <span className="text-xs font-medium tracking-wide text-brand-rose-deep uppercase">
+                      {product.category}
+                    </span>
+                    <h3 className="mt-1 font-serif text-lg text-brand-ink">{product.name}</h3>
+                    <p className="mt-1 text-sm text-brand-ink/70">{product.tagline}</p>
+                  </div>
+                  <div className="mt-auto flex items-center justify-between pt-2">
+                    <span className="text-sm font-semibold text-brand-rose-deep">
+                      From ₹{product.startingPrice}
+                    </span>
+                    {product.sizes ? (
+                      <span className="text-xs text-brand-ink/50">{product.sizes.join(" / ")}</span>
+                    ) : null}
+                  </div>
+                </Link>
+              ))}
+            </div>
+          ) : (
+            <p className="mt-16 text-center text-sm text-brand-ink/60">
+              No products in this category yet — check back soon.
+            </p>
+          )}
         </section>
       </main>
       <Footer />
