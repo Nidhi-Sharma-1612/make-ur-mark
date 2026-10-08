@@ -26,6 +26,19 @@ export async function POST(request: Request) {
   const emailMatches = email.toLowerCase() === adminEmail.toLowerCase();
   const passwordMatches = await compare(password, adminPasswordHash);
 
+  // TEMPORARY DEBUG LOGGING — remove after diagnosing login issue.
+  console.log("[admin-login-debug]", {
+    envEmailLength: adminEmail.length,
+    envHashLength: adminPasswordHash.length,
+    envHashPrefix: adminPasswordHash.slice(0, 7),
+    envHashHasBackslash: adminPasswordHash.includes("\\"),
+    envHashHasWhitespace: /\s/.test(adminPasswordHash),
+    submittedEmailLength: email.length,
+    submittedPasswordLength: password.length,
+    emailMatches,
+    passwordMatches,
+  });
+
   if (!emailMatches || !passwordMatches) {
     return NextResponse.json({ error: "Invalid email or password" }, { status: 401 });
   }
