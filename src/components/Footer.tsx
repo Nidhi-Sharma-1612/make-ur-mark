@@ -1,4 +1,4 @@
-import { AtSign, MessageCircle } from "lucide-react";
+import { AtSign, Mail, MessageCircle } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import Logo from "./Logo";
@@ -58,6 +58,14 @@ export default async function Footer() {
           >
             <AtSign className="h-4 w-4" /> {instagramHandle}
           </a>
+          {settings.contactEmail ? (
+            <a
+              href={`mailto:${settings.contactEmail}`}
+              className="flex items-center gap-2 text-sm hover:text-brand-white"
+            >
+              <Mail className="h-4 w-4" /> {settings.contactEmail}
+            </a>
+          ) : null}
         </div>
       </div>
 
