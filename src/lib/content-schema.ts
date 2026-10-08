@@ -1,3 +1,14 @@
+import {
+  Award,
+  Building2,
+  Handshake,
+  ImageIcon,
+  LayoutGrid,
+  MessageSquareQuote,
+  Sparkles,
+  type LucideIcon,
+} from "lucide-react";
+
 export type ContentFieldType = "text" | "textarea" | "image" | "list" | "repeatable";
 
 export type ContentField = {
@@ -11,6 +22,7 @@ export type ContentField = {
 export type ContentSectionSchema = {
   section: string;
   label: string;
+  icon: LucideIcon;
   fields: ContentField[];
 };
 
@@ -18,6 +30,7 @@ export const CONTENT_SCHEMA: ContentSectionSchema[] = [
   {
     section: "hero",
     label: "Hero",
+    icon: ImageIcon,
     fields: [
       { key: "headline", label: "Headline", type: "text" },
       { key: "subtext", label: "Subtext", type: "textarea" },
@@ -28,6 +41,7 @@ export const CONTENT_SCHEMA: ContentSectionSchema[] = [
   {
     section: "trustStrip",
     label: "Trust Strip",
+    icon: Award,
     fields: [
       {
         key: "items",
@@ -39,7 +53,8 @@ export const CONTENT_SCHEMA: ContentSectionSchema[] = [
   },
   {
     section: "shopCategories",
-    label: "Shop By Category (section heading)",
+    label: "Shop By Category",
+    icon: LayoutGrid,
     fields: [
       { key: "eyebrow", label: "Eyebrow", type: "text" },
       { key: "heading", label: "Heading", type: "text" },
@@ -49,6 +64,7 @@ export const CONTENT_SCHEMA: ContentSectionSchema[] = [
   {
     section: "howItWorks",
     label: "How It Works",
+    icon: Sparkles,
     fields: [
       { key: "eyebrow", label: "Eyebrow", type: "text" },
       { key: "heading", label: "Heading", type: "text" },
@@ -67,6 +83,7 @@ export const CONTENT_SCHEMA: ContentSectionSchema[] = [
   {
     section: "bulkOrders",
     label: "Bulk Orders",
+    icon: Building2,
     fields: [
       { key: "eyebrow", label: "Eyebrow", type: "text" },
       { key: "heading", label: "Heading", type: "text" },
@@ -77,6 +94,7 @@ export const CONTENT_SCHEMA: ContentSectionSchema[] = [
   {
     section: "testimonials",
     label: "Testimonials",
+    icon: MessageSquareQuote,
     fields: [
       { key: "heading", label: "Heading", type: "text" },
       {
@@ -94,6 +112,7 @@ export const CONTENT_SCHEMA: ContentSectionSchema[] = [
   {
     section: "aboutFounder",
     label: "Our Story",
+    icon: Handshake,
     fields: [
       { key: "eyebrow", label: "Eyebrow", type: "text" },
       { key: "heading", label: "Heading", type: "text" },
@@ -105,6 +124,7 @@ export const CONTENT_SCHEMA: ContentSectionSchema[] = [
   {
     section: "ctaBanner",
     label: "CTA Banner",
+    icon: Sparkles,
     fields: [
       { key: "heading", label: "Heading", type: "text" },
       { key: "headingAccent", label: "Heading accent (script text)", type: "text" },
@@ -114,6 +134,7 @@ export const CONTENT_SCHEMA: ContentSectionSchema[] = [
   {
     section: "footer",
     label: "Footer",
+    icon: LayoutGrid,
     fields: [
       { key: "tagline", label: "Tagline", type: "text" },
       { key: "instagramHandle", label: "Instagram handle text", type: "text" },

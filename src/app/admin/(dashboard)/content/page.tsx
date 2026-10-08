@@ -1,11 +1,18 @@
 import ContentSectionForm from "@/components/admin/ContentSectionForm";
+import ContentSectionNav from "@/components/admin/ContentSectionNav";
 import { CONTENT_SCHEMA } from "@/lib/content-schema";
 import { getAllSiteContentGrouped } from "@/lib/content";
 
 export const dynamic = "force-dynamic";
 
-export default async function AdminContentPage() {
+type PageProps = {
+  searchParams: Promise<{ section?: string }>;
+};
+
+export default async function AdminContentPage({ searchParams }: PageProps) {
+  const { section } = await searchParams;
   const grouped = await getAllSiteContentGrouped();
+  const activeSchema = CONTENT_SCHEMA.find((s) => s.section === section) ?? CONTENT_SCHEMA[0];
 
   return (
     <div className="flex flex-col gap-6">
@@ -16,10 +23,15 @@ export default async function AdminContentPage() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 items-start gap-6 xl:grid-cols-2">
-        {CONTENT_SCHEMA.map((schema) => (
-          <ContentSectionForm key={schema.section} schema={schema} initialValues={grouped[schema.section] ?? {}} />
-        ))}
+      <div className="flex flex-col gap-6 lg:flex-row lg:items-start">
+        <ContentSectionNav active={activeSchema.section} />
+        <div className="min-w-0 max-w-2xl flex-1">
+          <ContentSectionForm
+            key={activeSchema.section}
+            schema={{ section: activeSchema.section, label: activeSchema.label, fields: activeSchema.fields }}
+            initialValues={grouped[activeSchema.section] ?? {}}
+          />
+        </div>
       </div>
     </div>
   );
