@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Loader2, Trash2 } from "lucide-react";
+import { IndianRupee, Info, Layers, Loader2, Package, Trash2 } from "lucide-react";
 import AdminImageUpload from "./AdminImageUpload";
 import ChipInput from "./ChipInput";
 
@@ -45,6 +45,29 @@ function slugify(value: string) {
     .trim()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
+}
+
+const inputClass =
+  "rounded-xl border border-brand-blush bg-brand-white px-4 py-2.5 text-sm font-normal text-brand-ink focus:border-brand-rose focus:outline-none";
+
+function SectionCard({
+  icon: Icon,
+  title,
+  children,
+}: {
+  icon: React.ElementType;
+  title: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="flex flex-col gap-5 rounded-2xl border border-brand-blush bg-brand-white p-6">
+      <div className="flex items-center gap-2">
+        <Icon className="h-4 w-4 text-brand-rose-deep" />
+        <h2 className="font-serif text-lg text-brand-ink">{title}</h2>
+      </div>
+      {children}
+    </div>
+  );
 }
 
 type ProductFormProps = {
@@ -118,134 +141,155 @@ export default function ProductForm({ initial, categories }: ProductFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex max-w-2xl flex-col gap-5">
-      <div className="grid gap-5 sm:grid-cols-2">
-        <label className="flex flex-col gap-1.5 text-sm font-medium text-brand-ink">
-          Name
-          <input
-            type="text"
-            required
-            value={values.name}
-            onChange={(e) => handleNameChange(e.target.value)}
-            className="rounded-xl border border-brand-blush bg-brand-white px-4 py-2.5 text-sm font-normal text-brand-ink focus:border-brand-rose focus:outline-none"
-          />
-        </label>
+    <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+      {error ? (
+        <div className="flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
+          <Info className="h-4 w-4 shrink-0" />
+          {error}
+        </div>
+      ) : null}
 
-        <label className="flex flex-col gap-1.5 text-sm font-medium text-brand-ink">
-          Slug
-          <input
-            type="text"
-            required
-            value={values.slug}
-            onChange={(e) => {
-              setSlugTouched(true);
-              update("slug", slugify(e.target.value));
-            }}
-            className="rounded-xl border border-brand-blush bg-brand-white px-4 py-2.5 text-sm font-normal text-brand-ink focus:border-brand-rose focus:outline-none"
-          />
-        </label>
-      </div>
+      <div className="grid gap-6 lg:grid-cols-3 lg:items-start">
+        {/* Main details — left, wider column */}
+        <div className="flex flex-col gap-6 lg:col-span-2">
+          <SectionCard icon={Package} title="Product details">
+            <div className="grid gap-5 sm:grid-cols-2">
+              <label className="flex flex-col gap-1.5 text-sm font-medium text-brand-ink">
+                Name
+                <input
+                  type="text"
+                  required
+                  value={values.name}
+                  onChange={(e) => handleNameChange(e.target.value)}
+                  className={inputClass}
+                />
+              </label>
 
-      <label className="flex flex-col gap-1.5 text-sm font-medium text-brand-ink">
-        Category
-        <select
-          required
-          value={values.categorySlug}
-          onChange={(e) => handleCategoryChange(e.target.value)}
-          className="rounded-xl border border-brand-blush bg-brand-white px-4 py-2.5 text-sm font-normal text-brand-ink focus:border-brand-rose focus:outline-none"
-        >
-          <option value="" disabled>
-            Select a category
-          </option>
-          {categories.map((c) => (
-            <option key={c.slug} value={c.slug}>
-              {c.name}
-            </option>
-          ))}
-        </select>
-      </label>
+              <label className="flex flex-col gap-1.5 text-sm font-medium text-brand-ink">
+                Slug
+                <input
+                  type="text"
+                  required
+                  value={values.slug}
+                  onChange={(e) => {
+                    setSlugTouched(true);
+                    update("slug", slugify(e.target.value));
+                  }}
+                  className={inputClass}
+                />
+              </label>
+            </div>
 
-      <label className="flex flex-col gap-1.5 text-sm font-medium text-brand-ink">
-        Tagline
-        <input
-          type="text"
-          required
-          value={values.tagline}
-          onChange={(e) => update("tagline", e.target.value)}
-          className="rounded-xl border border-brand-blush bg-brand-white px-4 py-2.5 text-sm font-normal text-brand-ink focus:border-brand-rose focus:outline-none"
-        />
-      </label>
+            <label className="flex flex-col gap-1.5 text-sm font-medium text-brand-ink">
+              Category
+              <select
+                required
+                value={values.categorySlug}
+                onChange={(e) => handleCategoryChange(e.target.value)}
+                className={inputClass}
+              >
+                <option value="" disabled>
+                  Select a category
+                </option>
+                {categories.map((c) => (
+                  <option key={c.slug} value={c.slug}>
+                    {c.name}
+                  </option>
+                ))}
+              </select>
+            </label>
 
-      <label className="flex flex-col gap-1.5 text-sm font-medium text-brand-ink">
-        Description
-        <textarea
-          required
-          rows={4}
-          value={values.description}
-          onChange={(e) => update("description", e.target.value)}
-          className="resize-none rounded-xl border border-brand-blush bg-brand-white px-4 py-2.5 text-sm font-normal text-brand-ink focus:border-brand-rose focus:outline-none"
-        />
-      </label>
+            <label className="flex flex-col gap-1.5 text-sm font-medium text-brand-ink">
+              Tagline
+              <input
+                type="text"
+                required
+                value={values.tagline}
+                onChange={(e) => update("tagline", e.target.value)}
+                className={inputClass}
+              />
+            </label>
 
-      <ChipInput
-        label="Features"
-        values={values.features}
-        onChange={(v) => update("features", v)}
-        placeholder="e.g. 100% combed cotton, 200 GSM"
-      />
+            <label className="flex flex-col gap-1.5 text-sm font-medium text-brand-ink">
+              Description
+              <textarea
+                required
+                rows={4}
+                value={values.description}
+                onChange={(e) => update("description", e.target.value)}
+                className={`resize-none ${inputClass}`}
+              />
+            </label>
 
-      <label className="flex flex-col gap-1.5 text-sm font-medium text-brand-ink sm:max-w-xs">
-        Starting price (₹)
-        <input
-          type="number"
-          required
-          min={0}
-          value={values.startingPrice}
-          onChange={(e) => update("startingPrice", Number(e.target.value))}
-          className="rounded-xl border border-brand-blush bg-brand-white px-4 py-2.5 text-sm font-normal text-brand-ink focus:border-brand-rose focus:outline-none"
-        />
-      </label>
+            <ChipInput
+              label="Features"
+              values={values.features}
+              onChange={(v) => update("features", v)}
+              placeholder="e.g. 100% combed cotton, 200 GSM"
+            />
+          </SectionCard>
 
-      <ChipInput label="Sizes" values={values.sizes} onChange={(v) => update("sizes", v)} placeholder="e.g. S, M, L" />
-      <ChipInput label="Colours" values={values.colors} onChange={(v) => update("colors", v)} placeholder="e.g. Black" />
-      <ChipInput
-        label="Print types"
-        values={values.printTypes}
-        onChange={(v) => update("printTypes", v)}
-        placeholder="e.g. Digital Print"
-      />
-      <ChipInput
-        label="Print locations"
-        values={values.printLocations}
-        onChange={(v) => update("printLocations", v)}
-        placeholder="e.g. Front"
-      />
+          <SectionCard icon={Layers} title="Options">
+            <div className="grid gap-5 sm:grid-cols-2">
+              <ChipInput label="Sizes" values={values.sizes} onChange={(v) => update("sizes", v)} placeholder="e.g. S, M, L" />
+              <ChipInput label="Colours" values={values.colors} onChange={(v) => update("colors", v)} placeholder="e.g. Black" />
+              <ChipInput
+                label="Print types"
+                values={values.printTypes}
+                onChange={(v) => update("printTypes", v)}
+                placeholder="e.g. Digital Print"
+              />
+              <ChipInput
+                label="Print locations"
+                values={values.printLocations}
+                onChange={(v) => update("printLocations", v)}
+                placeholder="e.g. Front"
+              />
+            </div>
+          </SectionCard>
+        </div>
 
-      <AdminImageUpload value={values.image} onChange={(url) => update("image", url)} label="Product image" />
+        {/* Image, price, actions — right, sticky sidebar */}
+        <div className="flex flex-col gap-6 lg:sticky lg:top-6">
+          <SectionCard icon={IndianRupee} title="Media & pricing">
+            <AdminImageUpload value={values.image} onChange={(url) => update("image", url)} label="Product image" />
 
-      {error ? <p className="text-sm text-red-600">{error}</p> : null}
+            <label className="flex flex-col gap-1.5 text-sm font-medium text-brand-ink">
+              Starting price (₹)
+              <input
+                type="number"
+                required
+                min={0}
+                value={values.startingPrice}
+                onChange={(e) => update("startingPrice", Number(e.target.value))}
+                className={inputClass}
+              />
+            </label>
+          </SectionCard>
 
-      <div className="flex items-center gap-3 pt-2">
-        <button
-          type="submit"
-          disabled={saving || !values.image}
-          className="inline-flex items-center gap-2 rounded-full bg-brand-rose-deep px-6 py-3 text-sm font-medium text-brand-white transition-colors duration-200 hover:bg-brand-ink disabled:opacity-60"
-        >
-          {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
-          {isEditing ? "Save changes" : "Create product"}
-        </button>
+          <div className="flex flex-col gap-3">
+            <button
+              type="submit"
+              disabled={saving || !values.image}
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-brand-rose-deep px-6 py-3 text-sm font-medium text-brand-white transition-colors duration-200 hover:bg-brand-ink disabled:opacity-60"
+            >
+              {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
+              {isEditing ? "Save changes" : "Create product"}
+            </button>
 
-        {isEditing ? (
-          <button
-            type="button"
-            onClick={handleDelete}
-            disabled={deleting}
-            className="inline-flex items-center gap-2 rounded-full border border-red-200 px-5 py-3 text-sm font-medium text-red-600 transition-colors hover:bg-red-50 disabled:opacity-60"
-          >
-            {deleting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4" />}
-            Delete
-          </button>
-        ) : null}
+            {isEditing ? (
+              <button
+                type="button"
+                onClick={handleDelete}
+                disabled={deleting}
+                className="inline-flex items-center justify-center gap-2 rounded-full border border-red-200 px-5 py-3 text-sm font-medium text-red-600 transition-colors hover:bg-red-50 disabled:opacity-60"
+              >
+                {deleting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4" />}
+                Delete product
+              </button>
+            ) : null}
+          </div>
+        </div>
       </div>
     </form>
   );

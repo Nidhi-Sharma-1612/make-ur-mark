@@ -1,6 +1,9 @@
 import { notFound } from "next/navigation";
+import AdminBackLink from "@/components/admin/AdminBackLink";
 import ProductForm from "@/components/admin/ProductForm";
 import { prisma } from "@/lib/db";
+
+export const dynamic = "force-dynamic";
 
 type PageProps = { params: Promise<{ id: string }> };
 
@@ -15,9 +18,12 @@ export default async function EditProductPage({ params }: PageProps) {
 
   return (
     <div className="flex flex-col gap-6">
-      <div>
-        <h1 className="font-serif text-2xl text-brand-ink">Edit Product</h1>
-        <p className="text-sm text-brand-ink/60">{product.name}</p>
+      <div className="flex flex-col gap-2">
+        <AdminBackLink href="/admin/products" label="Back to Products" />
+        <div>
+          <h1 className="font-serif text-2xl text-brand-ink">Edit Product</h1>
+          <p className="text-sm text-brand-ink/60">{product.name}</p>
+        </div>
       </div>
       <ProductForm
         categories={categories}

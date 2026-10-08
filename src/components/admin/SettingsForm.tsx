@@ -1,11 +1,34 @@
 "use client";
 
 import { useState } from "react";
-import { Loader2 } from "lucide-react";
+import { AtSign, Loader2, Mail, MessageCircle, Settings as SettingsIcon } from "lucide-react";
 
 type SettingsFormProps = {
   initial: { whatsappNumber: string; contactEmail: string | null; instagramUrl: string | null };
 };
+
+const inputClass =
+  "w-full rounded-xl border border-brand-blush bg-brand-white py-2.5 pl-10 pr-4 text-sm font-normal text-brand-ink focus:border-brand-rose focus:outline-none";
+
+function IconField({
+  icon: Icon,
+  label,
+  children,
+}: {
+  icon: React.ElementType;
+  label: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <label className="flex flex-col gap-1.5 text-sm font-medium text-brand-ink">
+      {label}
+      <div className="relative">
+        <Icon className="pointer-events-none absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-brand-ink/40" />
+        {children}
+      </div>
+    </label>
+  );
+}
 
 export default function SettingsForm({ initial }: SettingsFormProps) {
   const [whatsappNumber, setWhatsappNumber] = useState(initial.whatsappNumber);
@@ -41,39 +64,44 @@ export default function SettingsForm({ initial }: SettingsFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex max-w-md flex-col gap-5">
-      <label className="flex flex-col gap-1.5 text-sm font-medium text-brand-ink">
-        WhatsApp number (with country code, no + or spaces)
+    <form
+      onSubmit={handleSubmit}
+      className="flex max-w-xl flex-col gap-5 rounded-2xl border border-brand-blush bg-brand-white p-6"
+    >
+      <div className="flex items-center gap-2">
+        <SettingsIcon className="h-4 w-4 text-brand-rose-deep" />
+        <h2 className="font-serif text-lg text-brand-ink">Contact details</h2>
+      </div>
+
+      <IconField icon={MessageCircle} label="WhatsApp number (with country code, no + or spaces)">
         <input
           type="text"
           required
           value={whatsappNumber}
           onChange={(e) => setWhatsappNumber(e.target.value)}
           placeholder="919876543210"
-          className="rounded-xl border border-brand-blush bg-brand-white px-4 py-2.5 text-sm font-normal text-brand-ink focus:border-brand-rose focus:outline-none"
+          className={inputClass}
         />
-      </label>
+      </IconField>
 
-      <label className="flex flex-col gap-1.5 text-sm font-medium text-brand-ink">
-        Contact email (optional)
+      <IconField icon={Mail} label="Contact email (optional)">
         <input
           type="email"
           value={contactEmail}
           onChange={(e) => setContactEmail(e.target.value)}
-          className="rounded-xl border border-brand-blush bg-brand-white px-4 py-2.5 text-sm font-normal text-brand-ink focus:border-brand-rose focus:outline-none"
+          className={inputClass}
         />
-      </label>
+      </IconField>
 
-      <label className="flex flex-col gap-1.5 text-sm font-medium text-brand-ink">
-        Instagram URL (optional)
+      <IconField icon={AtSign} label="Instagram URL (optional)">
         <input
           type="url"
           value={instagramUrl}
           onChange={(e) => setInstagramUrl(e.target.value)}
           placeholder="https://instagram.com/makeurmark.in"
-          className="rounded-xl border border-brand-blush bg-brand-white px-4 py-2.5 text-sm font-normal text-brand-ink focus:border-brand-rose focus:outline-none"
+          className={inputClass}
         />
-      </label>
+      </IconField>
 
       {error ? <p className="text-sm text-red-600">{error}</p> : null}
 

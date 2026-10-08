@@ -16,7 +16,7 @@ export default async function AdminContentPage() {
         </p>
       </div>
 
-      <div className="flex max-w-2xl flex-col gap-6">
+      <div className="grid grid-cols-1 items-start gap-6 xl:grid-cols-2">
         {CONTENT_SCHEMA.map((schema) => (
           <ContentSectionForm key={schema.section} schema={schema} initialValues={grouped[schema.section] ?? {}} />
         ))}

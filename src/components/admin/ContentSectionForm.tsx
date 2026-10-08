@@ -1,10 +1,34 @@
 "use client";
 
 import { useState } from "react";
-import { Loader2, Plus, Trash2 } from "lucide-react";
+import {
+  Award,
+  Building2,
+  Handshake,
+  ImageIcon,
+  LayoutGrid,
+  Loader2,
+  MessageSquareQuote,
+  Plus,
+  Sparkles,
+  Trash2,
+  type LucideIcon,
+} from "lucide-react";
 import AdminImageUpload from "./AdminImageUpload";
 import ChipInput from "./ChipInput";
 import type { ContentSectionSchema } from "@/lib/content-schema";
+
+const SECTION_ICONS: Record<string, LucideIcon> = {
+  hero: ImageIcon,
+  trustStrip: Award,
+  shopCategories: LayoutGrid,
+  howItWorks: Sparkles,
+  bulkOrders: Building2,
+  testimonials: MessageSquareQuote,
+  aboutFounder: Handshake,
+  ctaBanner: Sparkles,
+  footer: LayoutGrid,
+};
 
 type ContentSectionFormProps = {
   schema: ContentSectionSchema;
@@ -41,9 +65,14 @@ export default function ContentSectionForm({ schema, initialValues }: ContentSec
     }
   }
 
+  const Icon = SECTION_ICONS[schema.section] ?? Sparkles;
+
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4 rounded-2xl border border-brand-blush bg-brand-white p-6">
-      <h2 className="font-serif text-lg text-brand-ink">{schema.label}</h2>
+      <div className="flex items-center gap-2">
+        <Icon className="h-4 w-4 text-brand-rose-deep" />
+        <h2 className="font-serif text-lg text-brand-ink">{schema.label}</h2>
+      </div>
 
       {schema.fields.map((field) => {
         if (field.type === "text") {
