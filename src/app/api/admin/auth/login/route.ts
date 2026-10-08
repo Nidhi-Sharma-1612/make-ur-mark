@@ -8,6 +8,20 @@ const loginSchema = z.object({
   password: z.string().min(1),
 });
 
+/**
+ * ADMIN_PASSWORD_HASH_B64 is the bcrypt hash, base64-encoded.
+ *
+ * The raw hash contains literal `$` characters (e.g. `$2b$10$...`), which
+ * have repeatedly been mangled by environment-variable systems that treat
+ * `$` as the start of variable interpolation (both Next.js's own .env file
+ * parser, and some hosting platforms' env var storage). Base64 has no `$`
+ * characters, so storing the hash this way sidesteps that whole class of bug
+ * regardless of platform quirks.
+ */
+function decodeHash(encoded: string): string {
+  return Buffer.from(encoded, "base64").toString("utf-8");
+}
+
 export async function POST(request: Request) {
   const body = await request.json().catch(() => null);
   const parsed = loginSchema.safeParse(body);
@@ -17,27 +31,15 @@ export async function POST(request: Request) {
 
   const { email, password } = parsed.data;
   const adminEmail = process.env.ADMIN_EMAIL;
-  const adminPasswordHash = process.env.ADMIN_PASSWORD_HASH;
+  const adminPasswordHashB64 = process.env.ADMIN_PASSWORD_HASH_B64;
 
-  if (!adminEmail || !adminPasswordHash) {
+  if (!adminEmail || !adminPasswordHashB64) {
     return NextResponse.json({ error: "Admin account is not configured" }, { status: 500 });
   }
 
+  const adminPasswordHash = decodeHash(adminPasswordHashB64);
   const emailMatches = email.toLowerCase() === adminEmail.toLowerCase();
   const passwordMatches = await compare(password, adminPasswordHash);
-
-  // TEMPORARY DEBUG LOGGING — remove after diagnosing login issue.
-  console.log("[admin-login-debug]", {
-    envEmailLength: adminEmail.length,
-    envHashLength: adminPasswordHash.length,
-    envHashPrefix: adminPasswordHash.slice(0, 7),
-    envHashHasBackslash: adminPasswordHash.includes("\\"),
-    envHashHasWhitespace: /\s/.test(adminPasswordHash),
-    submittedEmailLength: email.length,
-    submittedPasswordLength: password.length,
-    emailMatches,
-    passwordMatches,
-  });
 
   if (!emailMatches || !passwordMatches) {
     return NextResponse.json({ error: "Invalid email or password" }, { status: 401 });

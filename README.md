@@ -24,9 +24,9 @@ Every product, category, and piece of marketing copy on the site is editable fro
    ```bash
    cp .env.example .env
    ```
-   **Important:** the bcrypt hash in `ADMIN_PASSWORD_HASH` contains literal `$` characters, which Next.js's `.env` loader treats as variable-expansion syntax. Escape every `$` as `\$` or the hash will be silently corrupted and login will fail with "Admin account is not configured." Generate the hash and a session secret with:
+   **Important:** `ADMIN_PASSWORD_HASH_B64` is the bcrypt hash, base64-encoded — not the raw `$2b$10$...` string. Both Next.js's `.env` loader and some hosting platforms' env var storage (Coolify included) treat literal `$` as variable-interpolation syntax and silently mangle it, which breaks login with "Admin account is not configured" or "Invalid email or password." Base64 has no `$`, so it sidesteps the problem entirely. Generate it (and a session secret) with:
    ```bash
-   node -e "console.log(require('bcryptjs').hashSync('your-password', 10))"
+   node -e "console.log(Buffer.from(require('bcryptjs').hashSync('your-password', 10)).toString('base64'))"
    node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
    ```
 4. Run the initial migration and seed the database with the current catalog + site copy:
@@ -63,7 +63,7 @@ Changes save immediately to Postgres and appear on the public site the next time
 
 1. **Create a Postgres resource** in Coolify and copy its connection string into the app's `DATABASE_URL` env var.
 2. **Add a persistent volume** to the app resource, mounted at `/data/uploads` (or wherever `UPLOADS_DIR` points) — without this, uploaded images are lost on every redeploy, since anything written to the container's filesystem outside a mounted volume doesn't survive a new build.
-3. **Set env vars** on the app resource: `DATABASE_URL`, `ADMIN_EMAIL`, `ADMIN_PASSWORD_HASH` (escaped as above), `SESSION_SECRET`, `UPLOADS_DIR=/data/uploads`, `NODE_ENV=production`. Mark the hash and secret as sensitive.
+3. **Set env vars** on the app resource: `DATABASE_URL`, `ADMIN_EMAIL`, `ADMIN_PASSWORD_HASH_B64` (the base64-encoded hash, pasted as-is — no escaping needed), `SESSION_SECRET`, `UPLOADS_DIR=/data/uploads`, `NODE_ENV=production`. Mark the hash and secret as sensitive.
 4. The build runs `prisma generate` automatically via the `postinstall` script.
 5. Set the app's start command to run migrations before starting:
    ```bash
