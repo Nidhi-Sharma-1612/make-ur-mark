@@ -4,6 +4,7 @@ import { useState } from "react";
 import { MessageCircle } from "lucide-react";
 import DesignUpload from "./DesignUpload";
 import SectionHeading from "./SectionHeading";
+import { useWhatsAppNumber } from "./WhatsAppNumberProvider";
 import { buildWhatsAppLink, WHATSAPP_MESSAGES } from "@/lib/config";
 
 export default function ContactForm() {
@@ -11,6 +12,7 @@ export default function ContactForm() {
   const [phone, setPhone] = useState("");
   const [message, setMessage] = useState("");
   const [file, setFile] = useState<File | null>(null);
+  const whatsappNumber = useWhatsAppNumber();
 
   return (
     <section id="contact" className="mx-auto max-w-3xl px-6 py-20 sm:py-28">
@@ -24,6 +26,7 @@ export default function ContactForm() {
         onSubmit={(event) => {
           event.preventDefault();
           const link = buildWhatsAppLink(
+            whatsappNumber,
             WHATSAPP_MESSAGES.contactEnquiry({ name, phone, message, fileName: file?.name })
           );
           window.open(link, "_blank", "noopener,noreferrer");

@@ -10,6 +10,8 @@ import ShopCategories from "@/components/ShopCategories";
 import Testimonials from "@/components/Testimonials";
 import TrustStrip from "@/components/TrustStrip";
 
+export const dynamic = "force-dynamic";
+
 export default function Home() {
   return (
     <>

@@ -1,10 +1,6 @@
-// TODO: replace with the real MakeUrMark WhatsApp Business number (with country code, no + or spaces)
-// e.g. "919876543210" for +91 98765 43210
-export const WHATSAPP_NUMBER = "91XXXXXXXXXX";
-
-export function buildWhatsAppLink(message: string): string {
+export function buildWhatsAppLink(number: string, message: string): string {
   const encoded = encodeURIComponent(message);
-  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encoded}`;
+  return `https://wa.me/${number}?text=${encoded}`;
 }
 
 export const WHATSAPP_MESSAGES = {

@@ -1,0 +1,63 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Product {
+  id             String   @id @default(cuid())
+  slug           String   @unique
+  name           String
+  category       String
+  categorySlug   String
+  tagline        String
+  image          String
+  description    String   @db.Text
+  features       String[]
+  startingPrice  Int
+  sizes          String[]
+  colors         String[]
+  printTypes     String[]
+  printLocations String[]
+  sortOrder      Int      @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([categorySlug])
+}
+
+model Category {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  name        String
+  description String
+  image       String
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+/// Generic key/value store for every editable text block site-wide.
+/// `value` holds either a plain string or a JSON array of objects
+/// (e.g. the 4 trust-strip items, the 3 testimonials) depending on `key`.
+model SiteContent {
+  id        String   @id @default(cuid())
+  section   String
+  key       String
+  value     Json
+  updatedAt DateTime @updatedAt
+
+  @@unique([section, key])
+}
+
+/// Singleton row (id is always "default").
+model Settings {
+  id             String   @id @default("default")
+  whatsappNumber String   @default("91XXXXXXXXXX")
+  contactEmail   String?
+  instagramUrl   String?
+  updatedAt      DateTime @updatedAt
+}

@@ -5,6 +5,7 @@ import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import Logo from "./Logo";
 import WhatsAppButton from "./WhatsAppButton";
+import { useWhatsAppNumber } from "./WhatsAppNumberProvider";
 import { buildWhatsAppLink, WHATSAPP_MESSAGES } from "@/lib/config";
 
 const NAV_LINKS = [
@@ -18,6 +19,7 @@ const NAV_LINKS = [
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const whatsappNumber = useWhatsAppNumber();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -51,7 +53,7 @@ export default function Navbar() {
         </ul>
 
         <div className="hidden lg:block">
-          <WhatsAppButton href={buildWhatsAppLink(WHATSAPP_MESSAGES.general)}>
+          <WhatsAppButton href={buildWhatsAppLink(whatsappNumber, WHATSAPP_MESSAGES.general)}>
             Order on WhatsApp
           </WhatsAppButton>
         </div>
@@ -82,7 +84,7 @@ export default function Navbar() {
             ))}
           </ul>
           <WhatsAppButton
-            href={buildWhatsAppLink(WHATSAPP_MESSAGES.general)}
+            href={buildWhatsAppLink(whatsappNumber, WHATSAPP_MESSAGES.general)}
             className="mt-4 w-full justify-center"
           >
             Order on WhatsApp

@@ -4,8 +4,10 @@ import Link from "next/link";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import SectionHeading from "@/components/SectionHeading";
-import { CATEGORIES } from "@/lib/categories";
-import { PRODUCTS } from "@/lib/products";
+import { getAllCategories } from "@/lib/categories";
+import { getAllProducts, getProductsByCategory } from "@/lib/products";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Products — MakeUrMark",
@@ -19,13 +21,14 @@ type PageProps = {
 
 export default async function ProductsPage({ searchParams }: PageProps) {
   const { category: categorySlug } = await searchParams;
+  const categories = await getAllCategories();
   const activeCategory = categorySlug
-    ? CATEGORIES.find((c) => c.slug === categorySlug)
+    ? categories.find((c) => c.slug === categorySlug)
     : undefined;
 
   const products = activeCategory
-    ? PRODUCTS.filter((product) => product.categorySlug === activeCategory.slug)
-    : PRODUCTS;
+    ? await getProductsByCategory(activeCategory.slug)
+    : await getAllProducts();
 
   return (
     <>
@@ -53,7 +56,7 @@ export default async function ProductsPage({ searchParams }: PageProps) {
             >
               All
             </Link>
-            {CATEGORIES.map((category) => (
+            {categories.map((category) => (
               <Link
                 key={category.slug}
                 href={`/products?category=${category.slug}`}

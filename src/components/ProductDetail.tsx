@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Minus, Plus } from "lucide-react";
 import DesignUpload from "./DesignUpload";
 import WhatsAppButton from "./WhatsAppButton";
+import { useWhatsAppNumber } from "./WhatsAppNumberProvider";
 import { buildWhatsAppLink, WHATSAPP_MESSAGES } from "@/lib/config";
 import type { Product } from "@/lib/products";
 
@@ -49,10 +50,12 @@ export default function ProductDetail({ product }: { product: Product }) {
   const [printLocation, setPrintLocation] = useState(product.printLocations?.[0] ?? "");
   const [quantity, setQuantity] = useState(1);
   const [file, setFile] = useState<File | null>(null);
+  const whatsappNumber = useWhatsAppNumber();
 
   const whatsappLink = useMemo(
     () =>
       buildWhatsAppLink(
+        whatsappNumber,
         WHATSAPP_MESSAGES.productEnquiry({
           name: product.name,
           size: size || undefined,
@@ -63,7 +66,7 @@ export default function ProductDetail({ product }: { product: Product }) {
           fileName: file?.name,
         })
       ),
-    [product.name, size, color, printType, printLocation, quantity, file]
+    [whatsappNumber, product.name, size, color, printType, printLocation, quantity, file]
   );
 
   return (
