@@ -19,9 +19,13 @@ export const WHATSAPP_MESSAGES = {
     printLocation?: string;
     quantity: number;
     fileName?: string;
+    customerName: string;
+    phone: string;
   }) => {
     const lines = [
       `Hi MakeUrMark! I'd like to order the ${details.name}.`,
+      `Name: ${details.customerName}`,
+      `Phone: ${details.phone}`,
       details.size ? `Size: ${details.size}` : null,
       details.color ? `Colour: ${details.color}` : null,
       details.printType ? `Print type: ${details.printType}` : null,

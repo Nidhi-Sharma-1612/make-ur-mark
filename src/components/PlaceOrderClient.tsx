@@ -7,22 +7,27 @@ import { ArrowUpRight, ArrowRight } from "lucide-react";
 import SectionHeading from "./SectionHeading";
 import type { Category } from "@/lib/categories";
 
-type ShopCategoriesClientProps = {
+type PlaceOrderClientProps = {
   eyebrow: string;
   heading: string;
   subtitle: string;
+  description: string;
   categories: Category[];
 };
 
-export default function ShopCategoriesClient({
+export default function PlaceOrderClient({
   eyebrow,
   heading,
   subtitle,
+  description,
   categories,
-}: ShopCategoriesClientProps) {
+}: PlaceOrderClientProps) {
   return (
-    <section id="shop" className="mx-auto max-w-6xl px-6 py-20 sm:py-28">
+    <section id="place-order" className="mx-auto max-w-6xl px-6 py-20 sm:py-28">
       <SectionHeading eyebrow={eyebrow} title={heading} subtitle={subtitle} />
+      {description ? (
+        <p className="mx-auto mt-4 max-w-2xl text-center text-sm text-brand-ink/70">{description}</p>
+      ) : null}
 
       <div className="mt-12 grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-4">
         {categories.map((category, index) => (

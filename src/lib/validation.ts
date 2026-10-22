@@ -10,14 +10,21 @@ export const productSchema = z.object({
   categorySlug: z.string().min(1),
   tagline: z.string().min(1),
   image: z.string().min(1),
+  colorImages: z.record(z.string(), z.string()).default({}),
   description: z.string().min(1),
   features: z.array(z.string().min(1)).default([]),
   startingPrice: z.number().int().nonnegative(),
+  priceMin: z.number().int().nonnegative(),
+  priceMax: z.number().int().nonnegative(),
   sizes: z.array(z.string().min(1)).default([]),
+  outOfStockSizes: z.array(z.string().min(1)).default([]),
   colors: z.array(z.string().min(1)).default([]),
   printTypes: z.array(z.string().min(1)).default([]),
   printLocations: z.array(z.string().min(1)).default([]),
   sortOrder: z.number().int().default(0),
+}).refine((data) => data.priceMax >= data.priceMin, {
+  message: "Price max must be greater than or equal to price min",
+  path: ["priceMax"],
 });
 
 export const categorySchema = z.object({

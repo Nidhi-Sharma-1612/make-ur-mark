@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import AdminBackLink from "@/components/admin/AdminBackLink";
 import ProductForm from "@/components/admin/ProductForm";
 import { prisma } from "@/lib/db";
+import { toColorImages } from "@/lib/products";
 
 export const dynamic = "force-dynamic";
 
@@ -35,10 +36,14 @@ export default async function EditProductPage({ params }: PageProps) {
           categorySlug: product.categorySlug,
           tagline: product.tagline,
           image: product.image,
+          colorImages: toColorImages(product.colorImages),
           description: product.description,
           features: product.features,
           startingPrice: product.startingPrice,
+          priceMin: product.priceMin,
+          priceMax: product.priceMax,
           sizes: product.sizes,
+          outOfStockSizes: product.outOfStockSizes,
           colors: product.colors,
           printTypes: product.printTypes,
           printLocations: product.printLocations,

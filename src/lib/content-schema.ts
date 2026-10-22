@@ -5,6 +5,7 @@ import {
   ImageIcon,
   LayoutGrid,
   MessageSquareQuote,
+  ShoppingBag,
   Sparkles,
   type LucideIcon,
 } from "lucide-react";
@@ -52,13 +53,14 @@ export const CONTENT_SCHEMA: ContentSectionSchema[] = [
     ],
   },
   {
-    section: "shopCategories",
-    label: "Shop By Category",
-    icon: LayoutGrid,
+    section: "placeOrder",
+    label: "Place Your Order",
+    icon: ShoppingBag,
     fields: [
       { key: "eyebrow", label: "Eyebrow", type: "text" },
       { key: "heading", label: "Heading", type: "text" },
       { key: "subtitle", label: "Subtitle", type: "textarea" },
+      { key: "description", label: "How ordering works (description copy)", type: "textarea" },
     ],
   },
   {

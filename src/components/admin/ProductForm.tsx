@@ -14,10 +14,14 @@ export type ProductFormValues = {
   categorySlug: string;
   tagline: string;
   image: string;
+  colorImages: Record<string, string>;
   description: string;
   features: string[];
   startingPrice: number;
+  priceMin: number;
+  priceMax: number;
   sizes: string[];
+  outOfStockSizes: string[];
   colors: string[];
   printTypes: string[];
   printLocations: string[];
@@ -30,10 +34,14 @@ const EMPTY_PRODUCT: ProductFormValues = {
   categorySlug: "",
   tagline: "",
   image: "",
+  colorImages: {},
   description: "",
   features: [],
   startingPrice: 0,
+  priceMin: 0,
+  priceMax: 0,
   sizes: [],
+  outOfStockSizes: [],
   colors: [],
   printTypes: [],
   printLocations: [],
@@ -112,7 +120,7 @@ export default function ProductForm({ initial, categories }: ProductFormProps) {
       const res = await fetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values),
+        body: JSON.stringify({ ...values, startingPrice: values.priceMin }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error?.formErrors?.[0] ?? data.error ?? "Failed to save product");
@@ -231,8 +239,89 @@ export default function ProductForm({ initial, categories }: ProductFormProps) {
 
           <SectionCard icon={Layers} title="Options">
             <div className="grid gap-5 sm:grid-cols-2">
-              <ChipInput label="Sizes" values={values.sizes} onChange={(v) => update("sizes", v)} placeholder="e.g. S, M, L" />
-              <ChipInput label="Colours" values={values.colors} onChange={(v) => update("colors", v)} placeholder="e.g. Black" />
+              <div className="flex flex-col gap-2">
+                <ChipInput
+                  label="Sizes"
+                  values={values.sizes}
+                  onChange={(v) => {
+                    update("sizes", v);
+                    update(
+                      "outOfStockSizes",
+                      values.outOfStockSizes.filter((s) => v.includes(s))
+                    );
+                  }}
+                  placeholder="e.g. S, M, L"
+                />
+                {values.sizes.length ? (
+                  <div className="flex flex-col gap-1.5">
+                    <span className="text-xs font-medium text-brand-ink/60">
+                      Tap a size to mark it out of stock
+                    </span>
+                    <div className="flex flex-wrap gap-2">
+                      {values.sizes.map((size) => {
+                        const isOutOfStock = values.outOfStockSizes.includes(size);
+                        return (
+                          <button
+                            key={size}
+                            type="button"
+                            onClick={() =>
+                              update(
+                                "outOfStockSizes",
+                                isOutOfStock
+                                  ? values.outOfStockSizes.filter((s) => s !== size)
+                                  : [...values.outOfStockSizes, size]
+                              )
+                            }
+                            className={`rounded-full border px-3 py-1.5 text-xs font-medium transition-colors ${
+                              isOutOfStock
+                                ? "border-red-200 bg-red-50 text-red-500 line-through"
+                                : "border-brand-blush text-brand-ink/70 hover:border-brand-rose"
+                            }`}
+                          >
+                            {size}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ) : null}
+              </div>
+              <div className="flex flex-col gap-2">
+                <ChipInput
+                  label="Colours"
+                  values={values.colors}
+                  onChange={(v) => {
+                    update("colors", v);
+                    update(
+                      "colorImages",
+                      Object.fromEntries(Object.entries(values.colorImages).filter(([c]) => v.includes(c)))
+                    );
+                  }}
+                  placeholder="e.g. Black"
+                />
+                {values.colors.length ? (
+                  <div className="flex flex-col gap-3">
+                    <span className="text-xs font-medium text-brand-ink/60">
+                      Optional photo per colour — shown when a customer picks that colour. Leave blank to use the main product image.
+                    </span>
+                    <div className="grid grid-cols-2 gap-3">
+                      {values.colors.map((color) => (
+                        <AdminImageUpload
+                          key={color}
+                          value={values.colorImages[color] ?? ""}
+                          onChange={(url) => {
+                            const next = { ...values.colorImages };
+                            if (url) next[color] = url;
+                            else delete next[color];
+                            update("colorImages", next);
+                          }}
+                          label={color}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                ) : null}
+              </div>
               <ChipInput
                 label="Print types"
                 values={values.printTypes}
@@ -254,17 +343,30 @@ export default function ProductForm({ initial, categories }: ProductFormProps) {
           <SectionCard icon={IndianRupee} title="Media & pricing">
             <AdminImageUpload value={values.image} onChange={(url) => update("image", url)} label="Product image" />
 
-            <label className="flex flex-col gap-1.5 text-sm font-medium text-brand-ink">
-              Starting price (₹)
-              <input
-                type="number"
-                required
-                min={0}
-                value={values.startingPrice}
-                onChange={(e) => update("startingPrice", Number(e.target.value))}
-                className={inputClass}
-              />
-            </label>
+            <div className="grid grid-cols-2 gap-3">
+              <label className="flex flex-col gap-1.5 text-sm font-medium text-brand-ink">
+                Price min (₹)
+                <input
+                  type="number"
+                  required
+                  min={0}
+                  value={values.priceMin}
+                  onChange={(e) => update("priceMin", Number(e.target.value))}
+                  className={inputClass}
+                />
+              </label>
+              <label className="flex flex-col gap-1.5 text-sm font-medium text-brand-ink">
+                Price max (₹)
+                <input
+                  type="number"
+                  required
+                  min={0}
+                  value={values.priceMax}
+                  onChange={(e) => update("priceMax", Number(e.target.value))}
+                  className={inputClass}
+                />
+              </label>
+            </div>
           </SectionCard>
 
           <div className="flex flex-col gap-3">

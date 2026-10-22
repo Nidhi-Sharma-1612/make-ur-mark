@@ -1,25 +1,28 @@
-import FloralAccent from "./FloralAccent";
+import Image from "next/image";
 
 type LogoProps = {
   variant?: "dark" | "light";
   className?: string;
 };
 
-// Text-based wordmark matching the brand logo (serif "MAKEURMARK.IN" + script tagline).
-// Swap for the real logo image asset (public/logo.png via next/image) once the file is available.
+// Real brand mark, pre-processed into transparent-background PNGs (see
+// public/images/makeurmark_logo.jpeg for the original flattened artwork) —
+// "dark" is the rose-coloured mark for light backgrounds (navbar, admin),
+// "light" is the white mark for dark backgrounds (footer).
 export default function Logo({ variant = "dark", className }: LogoProps) {
-  const inkColor = variant === "light" ? "text-brand-white" : "text-brand-rose-deep";
-  const scriptColor = variant === "light" ? "text-brand-blush-light" : "text-brand-rose";
+  const src =
+    variant === "light"
+      ? "/images/makeurmark-logo-mark-white.png"
+      : "/images/makeurmark-logo-mark-rose.png";
 
   return (
-    <div className={`flex items-center gap-2 ${className ?? ""}`}>
-      <FloralAccent className={`h-8 w-6 ${scriptColor}`} />
-      <div className="leading-tight">
-        <div className={`font-serif text-lg tracking-wide ${inkColor}`}>
-          MAKEURMARK<span className={scriptColor}>.IN</span>
-        </div>
-        <div className={`-mt-1 font-script text-sm ${scriptColor}`}>Make it yours</div>
-      </div>
-    </div>
+    <Image
+      src={src}
+      alt="MakeUrMark.in — Make it yours"
+      width={356}
+      height={260}
+      sizes="260px"
+      className={`h-14 w-auto self-start ${className ?? ""}`}
+    />
   );
 }

@@ -8,14 +8,26 @@ export type Product = {
   categorySlug: string;
   tagline: string;
   image: string;
+  colorImages: Record<string, string>;
   description: string;
   features: string[];
   startingPrice: number;
+  priceMin: number;
+  priceMax: number;
   sizes?: string[];
+  outOfStockSizes: string[];
   colors: string[];
   printTypes: string[];
   printLocations?: string[];
 };
+
+export function toColorImages(value: ProductRow["colorImages"]): Record<string, string> {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return {};
+  const entries = Object.entries(value as Record<string, unknown>).filter(
+    (entry): entry is [string, string] => typeof entry[1] === "string"
+  );
+  return Object.fromEntries(entries);
+}
 
 function toProduct(row: ProductRow): Product {
   return {
@@ -25,10 +37,14 @@ function toProduct(row: ProductRow): Product {
     categorySlug: row.categorySlug,
     tagline: row.tagline,
     image: row.image,
+    colorImages: toColorImages(row.colorImages),
     description: row.description,
     features: row.features,
     startingPrice: row.startingPrice,
+    priceMin: row.priceMin,
+    priceMax: row.priceMax,
     sizes: row.sizes.length ? row.sizes : undefined,
+    outOfStockSizes: row.outOfStockSizes,
     colors: row.colors,
     printTypes: row.printTypes,
     printLocations: row.printLocations.length ? row.printLocations : undefined,

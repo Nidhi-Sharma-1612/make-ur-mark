@@ -1,10 +1,10 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { MessageSquareText, PackageCheck, Palette, Truck } from "lucide-react";
+import { MessageSquareText, PackageCheck, Palette, Sparkles, Truck } from "lucide-react";
 import SectionHeading from "./SectionHeading";
 
-const ICONS = [MessageSquareText, Palette, PackageCheck, Truck];
+const ICONS = [MessageSquareText, Palette, PackageCheck, Sparkles, Truck];
 
 type Step = { title: string; description: string };
 
@@ -21,14 +21,9 @@ export default function HowItWorksClient({ eyebrow, heading, subtitle, steps }: 
       <div className="mx-auto max-w-6xl px-6">
         <SectionHeading eyebrow={eyebrow} title={heading} subtitle={subtitle} />
 
-        <div className="relative mt-14 grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4">
-          <div
-            aria-hidden="true"
-            className="absolute top-8 right-[12.5%] left-[12.5%] hidden border-t-2 border-dashed border-brand-rose/30 lg:block"
-          />
-
+        <div className="mt-14 flex flex-wrap justify-center gap-x-10 gap-y-12">
           {steps.map((step, index) => {
-            const Icon = ICONS[index] ?? MessageSquareText;
+            const Icon = ICONS[index % ICONS.length];
             return (
               <motion.div
                 key={step.title}
@@ -36,7 +31,7 @@ export default function HowItWorksClient({ eyebrow, heading, subtitle, steps }: 
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.4 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="relative flex flex-col items-center gap-3 text-center"
+                className="flex w-full max-w-55 flex-col items-center gap-3 text-center sm:w-56"
               >
                 <div className="relative flex h-16 w-16 items-center justify-center rounded-full bg-brand-white shadow-md ring-4 ring-brand-blush-light">
                   <Icon strokeWidth={1.25} className="h-7 w-7 text-brand-rose-deep" />
