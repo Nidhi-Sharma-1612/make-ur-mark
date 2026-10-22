@@ -19,6 +19,7 @@ export const productSchema = z.object({
   sizes: z.array(z.string().min(1)).default([]),
   outOfStockSizes: z.array(z.string().min(1)).default([]),
   colors: z.array(z.string().min(1)).default([]),
+  outOfStockColors: z.array(z.string().min(1)).default([]),
   printTypes: z.array(z.string().min(1)).default([]),
   printLocations: z.array(z.string().min(1)).default([]),
   sortOrder: z.number().int().default(0),

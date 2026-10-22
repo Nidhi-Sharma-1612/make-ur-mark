@@ -54,11 +54,13 @@ function OptionGroup({
 function ColorSwatchGroup({
   label,
   options,
+  disabledOptions = [],
   value,
   onChange,
 }: {
   label: string;
   options: string[];
+  disabledOptions?: string[];
   value: string;
   onChange: (value: string) => void;
 }) {
@@ -69,22 +71,29 @@ function ColorSwatchGroup({
         {options.map((option) => {
           const { hex, isLiteral } = getColorSwatch(option);
           const selected = value === option;
+          const disabled = disabledOptions.includes(option);
           return (
             <button
               key={option}
               type="button"
+              disabled={disabled}
               onClick={() => onChange(option)}
-              className="flex flex-col items-center gap-1.5"
+              className={`flex flex-col items-center gap-1.5 ${disabled ? "cursor-not-allowed opacity-40" : ""}`}
             >
               <span
                 style={{ backgroundColor: hex }}
-                className={`flex h-9 w-9 items-center justify-center rounded-full border transition-shadow ${
+                className={`relative flex h-9 w-9 items-center justify-center rounded-full border transition-shadow ${
                   !isLiteral || hex === "#FFFFFF" ? "border-brand-ink/20" : "border-transparent"
-                } ${selected ? "ring-2 ring-brand-rose-deep ring-offset-2" : ""}`}
+                } ${selected && !disabled ? "ring-2 ring-brand-rose-deep ring-offset-2" : ""}`}
               >
                 {!isLiteral ? <span className="text-[10px] font-semibold text-brand-ink/50">?</span> : null}
+                {disabled ? (
+                  <span className="absolute inset-0 flex items-center justify-center">
+                    <span className="h-[1.5px] w-full rotate-45 bg-brand-ink/50" />
+                  </span>
+                ) : null}
               </span>
-              <span className="text-xs text-brand-ink/70">{option}</span>
+              <span className={`text-xs text-brand-ink/70 ${disabled ? "line-through" : ""}`}>{option}</span>
             </button>
           );
         })}
@@ -96,7 +105,9 @@ function ColorSwatchGroup({
 export default function ProductDetail({ product }: { product: Product }) {
   const firstAvailableSize = product.sizes?.find((s) => !product.outOfStockSizes.includes(s)) ?? product.sizes?.[0] ?? "";
   const [size, setSize] = useState(firstAvailableSize);
-  const [color, setColor] = useState(product.colors[0]);
+  const firstAvailableColor =
+    product.colors.find((c) => !product.outOfStockColors.includes(c)) ?? product.colors[0];
+  const [color, setColor] = useState(firstAvailableColor);
   const [printType, setPrintType] = useState(product.printTypes[0]);
   const [printLocation, setPrintLocation] = useState(product.printLocations?.[0] ?? "");
   const [quantity, setQuantity] = useState(1);
@@ -174,7 +185,13 @@ export default function ProductDetail({ product }: { product: Product }) {
             />
           ) : null}
 
-          <ColorSwatchGroup label="Colour" options={product.colors} value={color} onChange={setColor} />
+          <ColorSwatchGroup
+            label="Colour"
+            options={product.colors}
+            disabledOptions={product.outOfStockColors}
+            value={color}
+            onChange={setColor}
+          />
 
           <OptionGroup label="Print type" options={product.printTypes} value={printType} onChange={setPrintType} />
 

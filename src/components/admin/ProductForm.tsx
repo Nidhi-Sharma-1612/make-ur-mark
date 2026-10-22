@@ -23,6 +23,7 @@ export type ProductFormValues = {
   sizes: string[];
   outOfStockSizes: string[];
   colors: string[];
+  outOfStockColors: string[];
   printTypes: string[];
   printLocations: string[];
 };
@@ -43,6 +44,7 @@ const EMPTY_PRODUCT: ProductFormValues = {
   sizes: [],
   outOfStockSizes: [],
   colors: [],
+  outOfStockColors: [],
   printTypes: [],
   printLocations: [],
 };
@@ -296,9 +298,46 @@ export default function ProductForm({ initial, categories }: ProductFormProps) {
                       "colorImages",
                       Object.fromEntries(Object.entries(values.colorImages).filter(([c]) => v.includes(c)))
                     );
+                    update(
+                      "outOfStockColors",
+                      values.outOfStockColors.filter((c) => v.includes(c))
+                    );
                   }}
                   placeholder="e.g. Black"
                 />
+                {values.colors.length ? (
+                  <div className="flex flex-col gap-1.5">
+                    <span className="text-xs font-medium text-brand-ink/60">
+                      Tap a colour to mark it out of stock
+                    </span>
+                    <div className="flex flex-wrap gap-2">
+                      {values.colors.map((color) => {
+                        const isOutOfStock = values.outOfStockColors.includes(color);
+                        return (
+                          <button
+                            key={color}
+                            type="button"
+                            onClick={() =>
+                              update(
+                                "outOfStockColors",
+                                isOutOfStock
+                                  ? values.outOfStockColors.filter((c) => c !== color)
+                                  : [...values.outOfStockColors, color]
+                              )
+                            }
+                            className={`rounded-full border px-3 py-1.5 text-xs font-medium transition-colors ${
+                              isOutOfStock
+                                ? "border-red-200 bg-red-50 text-red-500 line-through"
+                                : "border-brand-blush text-brand-ink/70 hover:border-brand-rose"
+                            }`}
+                          >
+                            {color}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ) : null}
                 {values.colors.length ? (
                   <div className="flex flex-col gap-3">
                     <span className="text-xs font-medium text-brand-ink/60">

@@ -17,6 +17,7 @@ export type Product = {
   sizes?: string[];
   outOfStockSizes: string[];
   colors: string[];
+  outOfStockColors: string[];
   printTypes: string[];
   printLocations?: string[];
 };
@@ -46,6 +47,7 @@ function toProduct(row: ProductRow): Product {
     sizes: row.sizes.length ? row.sizes : undefined,
     outOfStockSizes: row.outOfStockSizes,
     colors: row.colors,
+    outOfStockColors: row.outOfStockColors,
     printTypes: row.printTypes,
     printLocations: row.printLocations.length ? row.printLocations : undefined,
   };

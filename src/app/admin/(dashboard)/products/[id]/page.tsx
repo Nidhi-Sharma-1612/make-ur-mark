@@ -45,6 +45,7 @@ export default async function EditProductPage({ params }: PageProps) {
           sizes: product.sizes,
           outOfStockSizes: product.outOfStockSizes,
           colors: product.colors,
+          outOfStockColors: product.outOfStockColors,
           printTypes: product.printTypes,
           printLocations: product.printLocations,
         }}

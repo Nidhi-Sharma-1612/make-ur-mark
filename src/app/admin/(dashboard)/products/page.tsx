@@ -8,6 +8,10 @@ export const dynamic = "force-dynamic";
 export default async function AdminProductsPage() {
   const products = await prisma.product.findMany({ orderBy: { sortOrder: "asc" } });
 
+  function formatPrice(p: (typeof products)[number]) {
+    return p.priceMax !== p.priceMin ? `₹${p.priceMin} – ₹${p.priceMax}` : `₹${p.priceMin}`;
+  }
+
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -52,7 +56,7 @@ export default async function AdminProductsPage() {
                 <div className="min-w-0 flex-1">
                   <p className="truncate font-medium text-brand-ink">{product.name}</p>
                   <p className="truncate text-xs text-brand-ink/60">
-                    {product.category} · ₹{product.startingPrice}
+                    {product.category} · {formatPrice(product)}
                   </p>
                 </div>
                 <ChevronRight className="h-4 w-4 shrink-0 text-brand-ink/30" />
@@ -91,7 +95,7 @@ export default async function AdminProductsPage() {
                     </td>
                     <td className="px-4 py-3 text-brand-ink/70">
                       <Link href={`/admin/products/${product.id}`} className="block">
-                        ₹{product.startingPrice}
+                        {formatPrice(product)}
                       </Link>
                     </td>
                     <td className="px-4 py-3 text-right">
